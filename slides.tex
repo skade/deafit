@@ -1,0 +1,491 @@
+% $Header$
+
+\documentclass{beamer}
+
+
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+
+
+\mode<presentation>
+{
+  \usetheme{metropolis}
+
+  \usecolortheme{seahorse}
+  \usefonttheme[onlylarge]{structurebold}
+  \setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries}
+  \setbeamertemplate{navigation symbols}{}
+
+  \setbeamercovered{transparent}
+  % oder auch nicht
+}
+
+
+\usepackage[english]{babel}
+\usepackage{pygmentex}
+\usepackage{pifont}
+\usepackage{fdsymbol}
+
+\setpygmented{lang=rust,font=\ttfamily\scriptsize}
+% oder was auch immer
+
+%\usepackage[latin1]{inputenc}
+% oder was auch immer
+
+%\usepackage{times}
+%\usepackage[T1]{fontenc}
+% Oder was auch immer. Zu beachten ist, das Font und Encoding passen
+% m�ssen. Falls T1 nicht funktioniert, kann man versuchen, die Zeile
+% mit fontenc zu l�schen.
+
+
+\title[Die Programmiersprache Rust] % (optional, nur bei langen Titeln n�tig)
+{Die Programmiersprache Rust}
+
+\subtitle
+{Sicher, nebenläufig... und schnell}
+
+\author 
+{Florian Gilcher}
+
+\institute
+{
+  CEO und Rust-Trainer\\
+  Ferrous Systems GmbH }
+
+\date
+{DeafIT 2018}
+
+\subject{Informatik}
+
+% TODO Ferrous-Logo
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Gliederung}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+
+\begin{document}
+
+\newcommand{\one}{\ding{202}}
+\newcommand{\two}{\ding{203}}
+\newcommand{\three}{\ding{204}}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+
+\begin{frame}{Whoami}
+
+	\begin{itemize}
+		\item
+		      Rust-Programmierer und Trainer seit 2013
+		\item
+			  Projektmitglied seit 2015
+		\item
+			  Vorher 10 Jahre Rubyist
+		\item
+			  Programmierberater mit kleiner Firma
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Gliederung}
+	\tableofcontents
+
+\end{frame}
+
+
+\section{Die Sprache}
+
+\subsection{Hintergrund}
+
+\begin{frame}{Historie - Woher kommt Rust?}
+
+	\begin{itemize}
+		\item
+		      Begonnen von Graydon Hoare in Jahr 2008.
+		\item
+			  Adoptiert von Mozilla Research ca. 2010.
+		\item
+		      Abgegeben von Graydon im Jahr 2013
+		\item
+		      Version 1.0 im Jahr 2015.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Was sind die Ziele von Rust?}
+
+	\begin{itemize}
+		\item Sicher:
+		      \begin{itemize}
+			      \item
+			            Keine unsicheren Speicherzugriffe.
+			      \item
+			            Sichere Collections-API als default
+		      \end{itemize}
+		\item<2->
+		      Nebenläufig
+		      \begin{itemize}
+			      \item
+			            Compiler weiss über Nebenläufigkeit bescheid
+			      \item
+			            Verhinder unsichere Zugriffe über Grenzen hinweg
+		      \end{itemize}
+		\item<3->
+		      Schnell:
+		      \begin{itemize}
+			      \item
+			            Laufzeitgeschwindigkeit ähnlich von C
+			      \item
+			            Sicherheitschecks komplett zur Kompilierzeit
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Was sind die Ziele von Rust?}
+
+	\begin{itemize}
+		\item Stabile, große Codebasen:
+		      \begin{itemize}
+			      \item
+			            Kommuniziert viel Kontext lokal
+			      \item
+			            Manchmal etwas verbos
+			      \item
+			            Detailliertes Reporting von Fehlern
+		      \end{itemize}
+		\item<2-> Bei voller Kontrolle
+		      \begin{itemize}
+			      \item
+			            Rust erlaubt Kontrolle über das Speicherlayout
+			      \item
+			            Unterscheidet zwischen rohen Daten und Referenzen
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Was sind die Ziele von Rust?}
+	Rust ist eine schlechte Sprache für Codebeispiele auf Folien.
+\end{frame}
+
+\begin{frame}{Wie sieht Rust aus?}
+	\inputpygmented[lang=rust]{code/hello_world.rs}
+\end{frame}
+
+\begin{frame}{Wie sieht Rust aus?}
+	\inputpygmented[lang=rust]{code/longer_example.rs}
+\end{frame}
+
+\begin{frame}{Wie sieht Rust aus?}
+	\inputpygmented[lang=rust]{code/expanded_example.rs}
+\end{frame}
+
+\subsection{Basiskonzepte}
+
+\begin{frame}{Basiskonzepte}
+	Rust hat wenige Basiskonzepte. Diese sind aber fundamental und etwas ungewohnt.
+\end{frame}
+
+\begin{frame}{Mutabilität}
+	Programmiersprachen sehen heute Daten oft als (semantisch) immutable oder mutabel an. Wo landet Rust?
+\end{frame}
+
+\begin{frame}{Mutabilität}
+	\inputpygmented[lang=rust]{code/mutability_broken.rs}
+\end{frame}
+
+\begin{frame}{Mutabilität}
+	\inputpygmented[lang=rust]{code/mutability_working.rs}
+
+	\begin{itemize}
+		\item Mutabilität ist eine Eigenschaft der Variable!
+		\item Der Mutabilitätsmarker wird später weiter verwendet.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Mutabilität}
+	Rust landet auf beiden Seiten - und verwendet diese Information später weiter!
+\end{frame}
+
+\begin{frame}{Besitz - Ownership}
+	Alle Daten in Rust werden von genau einer Partei besessen.
+
+	\begin{itemize}
+		\item Daten im Besitz können beliebig geändert werden
+		\item Es besteht garantiert exklusiver Zugriff!
+		\item Der Besitzer muss die Daten aus dem Speicher entfernen
+		\item Dies geschieht am Ende eines Scopes
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Besitz - Ownership}
+	\inputpygmented[lang=rust]{code/ownership.rs}
+\end{frame}
+
+\begin{frame}{Besitz - Ownership}
+	Besitz kann abgegeben werden:
+
+	\inputpygmented[lang=rust]{code/ownership_function.rs}
+\end{frame}
+
+\begin{frame}{Besitz - Ownership}
+	
+	\inputpygmented[lang=rust,escapeinside=||]{code/ownership_function_broken.rs}
+
+	\ding{202} ist nicht erlaubt!\\
+
+	Das verhindert effektiv unabsichtlicher Weiterverwendung von gelöschten Daten!
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing}
+	Das ist auf die Dauer etwas unpraktisch. Daher können Daten auf "verliehen" werden.
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing}
+	\inputpygmented[lang=rust]{code/borrowing.rs}
+
+	Lingo: \& ist eine Referenz, Referenzen leihen in Rust aus
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing}
+	Einfach ausgeliehene Daten dürfen nicht verändert werden!
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing}
+	\inputpygmented[lang=rust]{code/mutable_borrowing.rs}
+	Lingo: \&mut ist eine mutable Referenz.
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing - Regeln}
+	Dazu gibt es folgende Regeln:
+	\begin{itemize}
+		\item Normales (immutables) Ausleihen ist beliebig häufig möglich.
+		\item Mutables Ausleihen ist nur exakt einmal möglich.
+		\item Beide Regeln sind exklusiv.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Ausleihen - Borrowing - Regeln}
+	Effektiv garantiert Rust damit, dass veränderbarer Speicher immer nur von einem Programmteil gesehen werden kann.
+	Datenraces beim schreiben/lesen auf Speicherzellen sind damit nicht möglich.
+\end{frame}
+
+\begin{frame}{Beispiel}
+	\inputpygmented[escapeinside=||,font=\ttfamily]{code/failing_borrow.rs}
+	\ding{202} Initialisierung eines neuen Vektors\\
+	\ding{203} Zeiger auf das dritte Element\\
+	\ding{204} Drittes Element wird gelöscht
+
+
+\end{frame}
+
+\begin{frame}{Beispiel}
+	\inputpygmented[lang=rust]{code/borrow_error.txt}
+
+	Mutationsfehler sind auch in Programmen mit nur einem Thread möglich!
+\end{frame}
+
+\begin{frame}{Iteration}
+	\inputpygmented[escapeinside=||]{code/iteration.rs}
+\end{frame}
+
+\begin{frame}{Iteration}
+	ConcurrentModificationExceptions sind in Rust nicht möglich!
+\end{frame}
+
+\begin{frame}{Generics und Algebraische Datentypen}
+	Rust erlaubt generische Programmierung. Generics in Rust sind ähnlich zu C++ Templates und Java Generics.
+
+	\inputpygmented[escapeinside=||]{code/generics.rs}
+	\ding{202} Collection-Typen sind generisch\\
+	\ding{203} Typ-Alternative für positiven Fall\\
+	\ding{204} Typ-Alternative für negativen fall
+\end{frame}
+
+\begin{frame}{Nebenläufigkeit}
+	Rust fängt bestimmte Sorten Nebenläufigkeitsfehler zur Kompilierzeit ab.
+
+	\inputpygmented[lang=rust]{code/threading_error.rs}
+\end{frame}
+
+\begin{frame}{Nebenläufigkeit}
+	Rust erkennt das Bewegen von Daten über Nebenläufigkeitsgrenzen hinweg und prüft 2 zusätzliche Eigenschaften:
+
+	\begin{itemize}
+		\item Send: können die Daten den Kontext (z.B. Thread) wechseln?
+		\item Sync: Sind die Daten synchronisisert?
+	\end{itemize}
+
+	Nur synchronisiserte Daten dürfen in Rust konkurrierend mutiert werden!
+\end{frame}
+
+\begin{frame}{Nebenläufigkeit}
+	Praktischerweise beweist das auch, wenn Daten sicher geteilt werden können, weil sie garantiert nicht verändert werden.
+\end{frame}
+
+\begin{frame}{Beispiel}
+	\inputpygmented[lang=rust]{code/two_functions.rs}
+
+	Diese beiden Funktionen können nicht parallel auf denselben Daten laufen!
+\end{frame}
+
+
+\begin{frame}{Häufig}
+   Das ist ein nahezu klassischer Speicherverletzungsfehler in fast allen Browsern.
+\end{frame}
+
+\begin{frame}{Nahe Zukunft: async/await}
+  \inputpygmented[lang=rust]{code/async_await.rs}
+
+  Rusts async/await ist laufzeitfrei.
+\end{frame}
+
+\begin{frame}{Tooling}
+	Rust kommt:
+
+	\begin{itemize}
+		\item Mit einem modernen Paketmanager (Cargo)
+		\item Einem Umgebungsmanager (rustup)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Goodies}
+	Rust bietet darüber hinaus:
+
+	\begin{itemize}
+		\item Eine unsichere Subsprache für direkten Speicherzugriff
+		\item Ein sehr gutes und direktes Foreign-Function-Interface basierend auf dem Platform-(C)-ABI
+		\item Krosskompilierung zu momentan 60 targets, inkl. bare metal
+		\item Sehr gutes Unterstützung für Kommandozeilen-Tools.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Ressourcenschonend}
+	\begin{itemize}
+		\item Die Sprache benötigt keinerlei Speicherallokation zum funktionieren
+		\item "Pay what you use": Nicht angeforderte Funktionen landen garnicht erst in der Binary
+		\item Optimierungsfreundlich: Standardtools zur Binary-Optimierung funktionieren
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Integrierbarkeit}
+	Rust möchte nicht unbedingt die Hauptsprache in einem Projekt sein, aber die beste Zweitsprache.
+\end{frame}
+
+
+\begin{frame}{Zusammenfassung}
+	Rust ist eine C/C++-ähnliche Sprache, die:
+
+	\begin{itemize}
+		\item Speichersicher ist
+		\item Keine(!) Laufzeitumgebung erfordert
+		\item Features bietet, die auch Hochsprachen Konkurrenz machen
+		\item Für sichere Parallelisierung ausgelegt ist
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Überall}
+	Rust funktioniert ohne Abstriche von Mikrocontrollern, über embedded Linux, das Smartphone, bis auf dem Server!
+\end{frame}
+
+\begin{frame}{Zugänglich}
+	Rust ist nicht leicht, aber auch nicht schwer.
+
+	Es kommt aber mit sehr guter Dokumentation und vielen Lernresourcen.
+\end{frame}
+
+\section{Das Projekt}
+
+\begin{frame}{Rust als FOSS-Projekt}
+	Rust ist:
+
+	\begin{itemize}
+		\item Inzwischen 3 Jahre alt
+		\item überraschend weit adoptiert
+		\item stark am wachsen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Adoption}
+
+	\begin{itemize}
+		\item Internet: Google Fuchsia, Dropbox, Mozilla Firefox, Mozilla Servo
+		\item Spiele: Chucklefish, Ready at Dawn
+		\item Embedded: mehrere IoT-Platformen, Robotikhersteller, Neuseeländer Feuerwehr
+		\item Kultur: Schauspiel Dortmund
+		\item Blockchain: gefühlt alle
+	\end{itemize}
+
+	Mehr als 100 Firmen, fast alle grossen Player (öffentlich)
+\end{frame}
+
+\begin{frame}{Projektgröße}
+	\begin{itemize}
+		\item 120 Teammitglieder
+		\item über 2000 Contributor (Compiler und Kernsoftware)
+		\item Kein zentralisiertes Management (Zeitzonen!)
+		\item Explizit kein BDFL (Benevolent Dictator for Life)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Aktivität}
+	Unter den 10 aktivsten Projekten auf GitHub
+\end{frame}
+
+\begin{frame}{Offenheit}
+	\begin{itemize}
+		\item Alle Entwicklung und Planung findet im Offenen statt
+		\item Sprachentwicklung über RFCs (Request for Comments), jederzeit nachlesbar
+		\item Starke Reviewkultur
+	\end{itemize}
+
+	Fast komplett textbasiert!
+\end{frame}
+
+\begin{frame}{Ansprechbar}
+	\begin{itemize}
+		\item Auf allen Repositories gibt es für Beginner markierte Issues (üblicherweise "E-Easy")
+		\item Bei den meisten ist Mentoring angeboten (üblicherweise "E-Mentored")
+		\item Wir helfen bei der Auswahl
+	\end{itemize}
+
+	Nicht wenige Leute fangen mit Compilerthemen an! Auch gerne mit schweren!
+\end{frame}
+
+\begin{frame}{Macht mit!}
+	Wer Lust hat: sprecht mich an, ich suche mit euch ein Ticket!
+\end{frame}
+
+
+\begin{frame}{Macht mit!}
+	Wer Lust hat: sprecht mich an, ich suche mit euch ein Ticket!
+\end{frame}
+
+
+\end{document}
+
+
+
